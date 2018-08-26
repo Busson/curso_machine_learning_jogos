@@ -24,20 +24,29 @@ Primeiro vamos
 
 Nessa atividade a cobra deve aprender a sobreviver no mapa. Para isso, ela deve aprender a desviar dos obstáculos. Os obstáculos do mapa podem ser uma parte do seu próprio corpo ou uma parede. A arquitetura padrão usada nesta atividade consiste de uma rede neural do tipo MLP com 2 camadas escondidas. A camada de entrada contém 4 atributos, os 3 primeiros ($x_1,x_2 e x_3$) respectivamente são 1 se existe um obstáculo a esquerda, frente e direita da cobra, e 0 caso contrário; O atributo $x_4$ indica qual a decisão de movimento da cobra, -1 para esquerda, 0 para frente e 1 para direita. A saída da rede prediz o estado da cobra, 0 para morta, e 1 para viva. A Figura abaixo ilsutra a arquitetura da rede neural. 
 
-![](imgs/mlp_sur.png)
+<p align="center">
+  <img src="imgs/mlp_sur.png" />
+</p>
 
-No inicio do código
+
+No arquivo "_snake/main.py_" ...
 
 ```
 CONST_TRAIN_MODE = True
 CONST_BOT_MODE = "survive"
 ```
 
+<p align="center">
+  <img src="imgs/test_sur.png" />
+</p>
+
 #### Aprendendo a procurar comida
 
 Nesta atividade é adicionado um novo atributo na rede para também dar capacidade de procurar por comida. Além dos 4 atributos especificados na atividade anterior, agora o novo atributo ($x_5$) indica em que direção a comida esta em relação a cobra, -1 se a comida está a esquerda da cobra, 0 na frente e 1 a direita. Também foi adicionado um novo neurônio na camada de saída que prediz se a cobra está caminhando na direção da comida, 1 para sim e 0 para não. 
 
-![](imgs/mlp_hun.png)
+<p align="center">
+  <img src="imgs/mlp_hun.png" />
+</p>
 
 ### Modo Play
 
