@@ -2,19 +2,21 @@ import pygame
 import tensorflow as tf
 from snake import *
 from neural_net import *
+from maps import *
 
 GAME = {}
 TRAINING_INFO = {}
 
-def initialize_game(IS_TRANING, GAME_MODE):
+def initialize_game(IS_TRANING, BOT_MODE):
     global GAME
     pygame.init()
-    create_neural_net(GAME_MODE)
-    init_tensorflow(IS_TRANING)
+    create_neural_net(BOT_MODE)
+    init_tensorflow(IS_TRANING, BOT_MODE)
     pygame.display.set_caption('DeepLearning Snake')
     GAME["screen"] = pygame.display.set_mode((600, 600))
     GAME["clock"] = pygame.time.Clock() 
     GAME["is_training"] = IS_TRANING
+    GAME["bot_mode"] = BOT_MODE
     if IS_TRANING: 
         GAME["clock_tick"] = 60
         TRAINING_INFO["max_pontuation"] = 0
@@ -23,7 +25,9 @@ def initialize_game(IS_TRANING, GAME_MODE):
         GAME["clock_tick"] = 10
     GAME["end"] = False
     GAME["text_font"] = pygame.font.SysFont("comicsansms", 28)
-    return True
+    
+    if BOT_MODE == "hungry":
+        create_apple_in_map()
 
 def await_ticks_and_fill_screen():
     global GAME
@@ -49,7 +53,10 @@ def draw_game_info_and_flip():
     if GAME["is_training"]:
         text_top = GAME["text_font"].render("Modo Treino: Mortes: "+str(TRAINING_INFO["death_count"])+" | Maior Pontuacao: "+str(TRAINING_INFO["max_pontuation"])+" | veloc. "+str(GAME["clock_tick"]), True, (230, 230, 230))
         GAME["screen"].blit(text_top, (5, 5))
-        text_bot = GAME["text_font"].render("Comandos: - veloc. (1) | + veloc. (2) | Salvar Aprendizado (S)", True, (230, 230, 230))
+        if GAME["bot_mode"] == "hungry":
+            text_bot = GAME["text_font"].render("Comandos: - veloc. (1) | + veloc. (2) | Salvar Aprendizado (S)", True, (230, 230, 230))
+        else:
+            text_bot = GAME["text_font"].render("Comandos: - veloc. (1) | + veloc. (2)", True, (230, 230, 230))    
         GAME["screen"].blit(text_bot, (5, 565))
     pygame.display.flip()
 
@@ -61,14 +68,14 @@ def capture_key_events():
 
             if event.key == pygame.K_1 and GAME["is_training"]:
                 GAME["clock_tick"] -= 10
-                if GAME["clock_tick"] < 5:
-                    GAME["clock_tick"] = 5
+                if GAME["clock_tick"] < 10:
+                    GAME["clock_tick"] = 10
             if event.key == pygame.K_2 and GAME["is_training"]:
                 GAME["clock_tick"] += 10
                 if GAME["clock_tick"] > 60:
                     GAME["clock_tick"] = 60
             if event.key == pygame.K_s and GAME["is_training"]:
-                save_learning()
+                save_learning(GAME["bot_mode"])
             if event.key == pygame.K_LEFT:
                 player_decision = -1
             if event.key == pygame.K_RIGHT:

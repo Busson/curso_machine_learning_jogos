@@ -22,24 +22,21 @@ from maps import *
 from manager import *
 
 
-TRAIN_MODE = True
-
-CONST_BOT_MODE = "hungry"
+CONST_TRAIN_MODE = True
+CONST_BOT_MODE = "survive"
 
 #create_map_rooms()
-#create_map_radome()
-create_apple_in_map()
-
+create_map_radome()
 
 snakes_data = {}
-if TRAIN_MODE: 
-    snakes_data["bot_snake"] = create_snake((15,15), 5, (0, 255, 128), "norte")
+if CONST_TRAIN_MODE: 
+    snakes_data["bot_snake"] = create_snake((15,15), 12, (0, 255, 128), "norte")
 else:
     #snakes_data["player_snake"] = create_snake((7,15), 5, (0, 255, 128), "norte") 
     snakes_data["bot_snake"] = create_snake((15,15), 5, (0, 255, 128), "norte") 
 
 
-initialize_game(TRAIN_MODE, CONST_BOT_MODE)
+initialize_game(CONST_TRAIN_MODE, CONST_BOT_MODE)
 
 while not GAME["end"]:
 
@@ -55,7 +52,7 @@ while not GAME["end"]:
         else:
            x_data, y_data = get_snake_sense_data(snake, CONST_BOT_MODE)
            #print(x_data, y_data) 
-           bot_mov = feed_neural_net(snake, x_data, y_data, TRAIN_MODE, CONST_BOT_MODE)
+           bot_mov = feed_neural_net(snake, x_data, y_data, CONST_TRAIN_MODE, CONST_BOT_MODE)
            move_snake(snake, bot_mov) 
 
            update_best_pontuation(snake) 

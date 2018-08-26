@@ -53,21 +53,21 @@ def create_neural_network_1(num_features, num_output):
     return x, y, out, cost, opt
 
 
-def init_tensorflow(IS_TRANING):
+def init_tensorflow(IS_TRANING, BOT_MODE):
     global tf_sess
     tf_sess.run(tf.global_variables_initializer())
 
-    if not IS_TRANING and os.path.exists("snake/save/model_snake.ckpt.meta"): 
+    if not IS_TRANING and BOT_MODE == "hungry" and os.path.exists("snake/save/model_snake.ckpt.meta"): 
         saver = tf.train.Saver()
         saver.restore(tf_sess, "snake/save/model_snake.ckpt")
         print("Pesos carregados!")
 
-def create_neural_net(mode):
+def create_neural_net(BOT_MODE):
     global tf_sess, NEURAL_NET
     if tf_sess == None:
         tf_sess = tf.InteractiveSession()
 
-    if mode == "hungry":
+    if BOT_MODE == "hungry":
         x, y, out, cost, opt = create_neural_network_1(5,2)
     else:
         x, y, out, cost, opt = create_neural_network_1(4,1) 
@@ -75,8 +75,12 @@ def create_neural_net(mode):
     NEURAL_NET = {"x": x,"y": y, "output": out, "cost": cost, "opt":opt}
    
 
-def save_learning():
+def save_learning(BOT_MODE):
     global tf_sess
+
+    if BOT_MODE != "hungry":
+        print("ERRO: somente a aprendizagem do modelo \"hungry\" pode ser salva")
+
     saver = tf.train.Saver()
 
     if not os.path.isdir("snake/save"):
