@@ -24,26 +24,22 @@ from manager import *
 
 TRAIN_MODE = True
 
-snakes_data = {}
-
-MATCH_NUMBER = 0
+CONST_BOT_MODE = "hungry"
 
 #create_map_rooms()
 #create_map_radome()
-
 create_apple_in_map()
 
+
+snakes_data = {}
 if TRAIN_MODE: 
-    snakes_data["bot_snake"] = create_snake((15,15), 5, (0, 255, 128), "norte", "hungry")
+    snakes_data["bot_snake"] = create_snake((15,15), 5, (0, 255, 128), "norte")
 else:
-    snakes_data["player_snake"] = create_snake((7,15), 5, (0, 255, 128), "norte") 
-    snakes_data["bot_snake"] = create_snake((22,15), 5, (0, 255, 128), "norte", "hungry") 
+    #snakes_data["player_snake"] = create_snake((7,15), 5, (0, 255, 128), "norte") 
+    snakes_data["bot_snake"] = create_snake((15,15), 5, (0, 255, 128), "norte") 
 
 
-train_best_score = 0
-
-
-initialize_game(TRAIN_MODE)
+initialize_game(TRAIN_MODE, CONST_BOT_MODE)
 
 while not GAME["end"]:
 
@@ -55,12 +51,11 @@ while not GAME["end"]:
 
     for key, snake in snakes_data.items():
         if key == "player_snake":
-           move_snake(snake, None)  
+           move_snake(snake, 0)  
         else:
-        
-           x_data, y_data = get_snake_sense_data(snake)
+           x_data, y_data = get_snake_sense_data(snake, CONST_BOT_MODE)
            #print(x_data, y_data) 
-           bot_mov = feed_neural_net(snake, x_data, y_data, TRAIN_MODE)
+           bot_mov = feed_neural_net(snake, x_data, y_data, TRAIN_MODE, CONST_BOT_MODE)
            move_snake(snake, bot_mov) 
 
            update_best_pontuation(snake) 

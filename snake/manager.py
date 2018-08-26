@@ -6,10 +6,11 @@ from neural_net import *
 GAME = {}
 TRAINING_INFO = {}
 
-def initialize_game(IS_TRANING):
+def initialize_game(IS_TRANING, GAME_MODE):
     global GAME
     pygame.init()
-    init_tensorflow()
+    create_neural_net(GAME_MODE)
+    init_tensorflow(IS_TRANING)
     pygame.display.set_caption('DeepLearning Snake')
     GAME["screen"] = pygame.display.set_mode((600, 600))
     GAME["clock"] = pygame.time.Clock() 
@@ -22,6 +23,7 @@ def initialize_game(IS_TRANING):
         GAME["clock_tick"] = 10
     GAME["end"] = False
     GAME["text_font"] = pygame.font.SysFont("comicsansms", 28)
+    return True
 
 def await_ticks_and_fill_screen():
     global GAME
@@ -39,7 +41,8 @@ def check_game_is_over(snakes_data):
     global GAME
     if game_is_over(snakes_data):
         restart_game(snakes_data)
-        TRAINING_INFO["death_count"] += 1 
+        if GAME["is_training"]:
+            TRAINING_INFO["death_count"] += 1 
 
 def draw_game_info_and_flip():
     global GAME
@@ -64,6 +67,8 @@ def capture_key_events():
                 GAME["clock_tick"] += 10
                 if GAME["clock_tick"] > 60:
                     GAME["clock_tick"] = 60
+            if event.key == pygame.K_s and GAME["is_training"]:
+                save_learning()
             if event.key == pygame.K_LEFT:
                 player_decision = -1
             if event.key == pygame.K_RIGHT:

@@ -42,12 +42,9 @@ def create_snake_body(head_position, size, initial_orientation):
     
     return snake_pieces
 
-def create_snake(head_position, size, color, initial_orientation, mode=None):
+def create_snake(head_position, size, color, initial_orientation):
     snake_pieces = create_snake_body(head_position, size, initial_orientation)    
-    neural_net = None
-    if mode != None:
-        neural_net = create_neural_net(mode)
-    snake = {"corpo": snake_pieces, "neural_net": neural_net, "pontos": 0, "orientacao": initial_orientation, "cor": color, "vivo": True, "mode": mode, "ini_pos": head_position, "ini_size": size, "init_ori": initial_orientation}
+    snake = {"corpo": snake_pieces, "pontos": 0, "orientacao": initial_orientation, "cor": color, "vivo": True, "ini_pos": head_position, "ini_size": size, "init_ori": initial_orientation}
     return snake
 
 def draw_snake(screen, snake):
@@ -105,14 +102,14 @@ def snake_sense(snake):
     return left, front, right
 
 
-def get_snake_sense_data(snake):
+def get_snake_sense_data(snake, MODE):
     
     left, front, right = snake_sense(snake) 
 
     x_data = np.zeros((3, 4))
     y_data = np.zeros((3, 1))
 
-    if snake["mode"] == "hungry":
+    if MODE == "hungry":
         x_data = np.zeros((3, 5))
         y_data = np.zeros((3, 2))
 
@@ -134,7 +131,7 @@ def get_snake_sense_data(snake):
             if right != 1:
                 y_data[i][0]= 1
 
-        if snake["mode"] == "hungry":
+        if MODE == "hungry":
             apple_ang = calc_angle_to_apple(snake)
             x_data[i][4] = apple_ang
 

@@ -18,7 +18,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import tensorflow as tf
 from snake import *
+import os
 
+NEURAL_NET = None
 
 tf_sess = None
 tf.set_random_seed(0)
@@ -45,17 +47,23 @@ def create_neural_network_1(num_features, num_output):
     #Optimizer
     opt = tf.train.AdamOptimizer(learning_rate=0.01).minimize(cost)
 
+
     out = tf.nn.sigmoid(out_layer)
 
     return x, y, out, cost, opt
 
 
-def init_tensorflow():
+def init_tensorflow(IS_TRANING):
     global tf_sess
     tf_sess.run(tf.global_variables_initializer())
 
+    if not IS_TRANING and os.path.exists("snake/save/model_snake.ckpt.meta"): 
+        saver = tf.train.Saver()
+        saver.restore(tf_sess, "snake/save/model_snake.ckpt")
+        print("Pesos carregados!")
+
 def create_neural_net(mode):
-    global tf_sess
+    global tf_sess, NEURAL_NET
     if tf_sess == None:
         tf_sess = tf.InteractiveSession()
 
@@ -64,25 +72,38 @@ def create_neural_net(mode):
     else:
         x, y, out, cost, opt = create_neural_network_1(4,1) 
 
-    neural_net = {"x": x,"y": y, "output": out, "cost": cost, "opt":opt}
-    return neural_net
-    
+    NEURAL_NET = {"x": x,"y": y, "output": out, "cost": cost, "opt":opt}
    
-def feed_neural_net(snake, x_data, y_data, in_train_mode):
-    
-    model = snake["neural_net"]
 
-    x = model["x"]
-    y = model["y"]
-    out = model["output"]
-    cost = model["cost"]
-    opt = model["opt"]
+def save_learning():
+    global tf_sess
+    saver = tf.train.Saver()
 
+    if not os.path.isdir("snake/save"):
+        os.makedirs("snake/save")
+
+    save_path = saver.save(tf_sess, "snake/save/model_snake.ckpt")
+    print("Modelo de aprendizagem foi salvo em:", save_path)  
+
+def feed_neural_net(snake, x_data, y_data, in_train_mode, BOT_MODE):
+    global tf_sess, NEURAL_NET
    
-    _, loss, dec = tf_sess.run([opt,cost,out], feed_dict={x: x_data, y: y_data})
-   
-    if snake["mode"] == "hungry":
-        dec = np.sum(dec, axis=1)
+    x = NEURAL_NET["x"]
+    y = NEURAL_NET["y"]
+    out = NEURAL_NET["output"]
+    cost = NEURAL_NET["cost"]
+    opt = NEURAL_NET["opt"]
+    
+    dec = 0
+
+    if in_train_mode:
+        _, loss, dec = tf_sess.run([opt,cost,out], feed_dict={x: x_data, y: y_data})
+    else:
+        dec = tf_sess.run(out, feed_dict={x: x_data, y: y_data})
+    
+    #if BOT_MODE == "hungry":
+    #    dec = np.sum(dec, axis=1)
+        #print(dec)
 
     #print("perda:",loss, "esquerda:", dec[0], "adiante", dec[1], "direta:", dec[2])
    
