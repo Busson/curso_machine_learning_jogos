@@ -102,15 +102,14 @@ def feed_neural_net(snake, x_data, y_data, in_train_mode, BOT_MODE):
 
     if in_train_mode:
         _, loss, dec = tf_sess.run([opt,cost,out], feed_dict={x: x_data, y: y_data})
+        #print("perda:",loss, "esquerda:", dec[0], "adiante", dec[1], "direta:", dec[2])
     else:
         dec = tf_sess.run(out, feed_dict={x: x_data, y: y_data})
     
-    #if BOT_MODE == "hungry":
-    #    dec = np.sum(dec, axis=1)
+    if BOT_MODE == "hungry":
+        dec = np.sum(dec, axis=1)
         #print(dec)
 
-    #print("perda:",loss, "esquerda:", dec[0], "adiante", dec[1], "direta:", dec[2])
-   
     arg_max = np.argmax(dec)
     if arg_max == 0:
         return -1
