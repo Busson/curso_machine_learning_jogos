@@ -33,24 +33,25 @@ CONST_TRAIN_MODE = True
 
 #### Aprendendo a sobreviver
 
-Nessa tarefa a cobra deve aprender a sobreviver no mapa. Para isso, ela deve aprender a desviar dos obstáculos. Os obstáculos do mapa podem ser uma parte do seu próprio corpo ou uma parede. A arquitetura padrão usada para aprender esta tarefa consiste de uma rede neural do tipo MLP com 2 camadas escondidas. A camada de entrada contém 4 atributos, os 3 primeiros _(x1,x2 e x_3)_ respectivamente recebem 1 se existe um obstáculo a esquerda, frente e direita da cobra, e 0 caso contrário; O atributo _x4_ indica qual a decisão de movimento da cobra, -1 para esquerda, 0 para frente e 1 para direita. A saída da rede prediz o estado da cobra, 0 para morta, e 1 para viva. A primeira e segunda camadas escondidas possuem 4 e 2 neurônios, respectivamente. A Figura abaixo ilsutra a arquitetura da rede neural. 
+Nessa tarefa a cobra deve aprender a sobreviver no mapa. Para isso, ela deve aprender a desviar dos obstáculos. Os obstáculos do mapa podem ser uma parte do seu próprio corpo ou uma parede. A arquitetura padrão usada para aprender esta tarefa consiste de uma rede neural do tipo MLP com 2 camadas escondidas. A camada de entrada contém 4 atributos, os 3 primeiros _(x1,x2 e x3)_ respectivamente recebem 1 se existe um obstáculo a esquerda, frente e direita da cobra, e 0 caso contrário; O atributo _x4_ indica qual a decisão de movimento da cobra, -1 para esquerda, 0 para frente e 1 para direita. A saída da rede prediz o estado da cobra, 0 para morta, e 1 para viva. A primeira e segunda camadas escondidas possuem 4 e 2 neurônios, respectivamente. Todos os neurônios utilizam a função de ativação _sigmoid_. Para cálculo do custo é usada a função _Cross Entropy_. A Figura abaixo ilsutra a arquitetura da rede neural. 
 
 <p align="center">
   <img src="imgs/mlp_sur.png" />
 </p>
 
-Antes de executar o jogo verifique se a variável _CONST_BOT_MODE_ está com o valor "_survive_" (como abaixo). Neste modo a cobra gera apenas os dados para a rede e interpreta sua saída apenas para tomar decisões de sobrevivência. Durante a execução do jogo, são gerados 3 _arrays_ de 4 dimensões, cada array contém uma decisão de movimento (-1/0/1) e os sensores de obstáculos em relação a cabeça da cobra. O _label_ corresponde a 3 _arrays_ de 1 dimensão, indicando o estado de vida da cobra para cada decisão de movimento, 1 para viva e 0 para morta. A saída da rede é usada para a tomada de decisão, a maior ativação dentre as 3 saídas é usada para indicar qual movimento deve ser feito, por exemplo: dada a saída [0.9, 0.5, 0.3] a cobra deve ir para a esquerda, pois o valor da primeira posição corresponde ao _array_ de entrada do movimento esquerda.
+Antes de executar o jogo verifique se a variável _CONST_BOT_MODE_ está com o valor "_survive_" (como abaixo). Neste modo a cobra gera apenas os dados para a rede e interpreta sua saída apenas para tomar decisões de sobrevivência. Durante a execução do treinamento, são gerados 3 _arrays_ de 4 dimensões, cada array contém uma decisão de movimento (-1/0/1) e os sensores de obstáculos em relação a cabeça da cobra. O _label_ corresponde a 3 _arrays_ de 1 dimensão, indicando o estado de vida da cobra para cada decisão de movimento, 1 para viva e 0 para morta. A saída da rede é usada para a tomada de decisão, a maior ativação dentre as 3 saídas é usada para indicar qual movimento deve ser feito, por exemplo: dada a saída [0.9, 0.5, 0.3] a cobra deve ir para a esquerda, pois o valor da primeira posição corresponde ao _array_ de entrada do movimento esquerda.
 
 ```
 CONST_BOT_MODE = "survive"
 ```
 
-Ao executar o jogo a cobra morre com bastante frequência, isso acorre basicamente por que a cobra acaba mordendo seu próprio corpo. Sempre que a cobra morre o jogo é reiniciado. Após morrer 35 vezes a cobra começa a desviar do seu próprio corpo até que ela "entende" que a melhor decisão para esse caso é andar em linha reta. 
+Note que ao executar o jogo a cobra morre com bastante frequência, isso acorre por que a cobra toma decisões ruins e acaba mordendo seu próprio corpo. Sempre que a cobra morre o jogo é reiniciado. Após morrer 35 vezes a cobra começa a desviar do seu próprio corpo até que ela "entende" que a melhor decisão para esse caso é andar em linha reta. Ao executar o jogo em um mapa que contém paredes, após morrer 40 vezes a cobra aprende a desviar tanto do seu corpo quanto das paredes. Para carregar o mapa que contém paredes descomente a linha abaixo:
 
+```
+create_map_radome()
+```
 
-
-
-
+A Figura abaixo ilustra o jogo rodando nos dois cenários. No modo de treinamento a interface do jogo exibe algumas informações: quantidade de vezes que a cobra morreu, pontuação máxima (explorado na próxima etapa), velocidade atual do jogo. É possivel diminuir e aumentar a velocidade do jogo usando as teclas 1 e 2, respectivamente.
 
 <p align="center">
   <img src="imgs/test_sur.png" />
@@ -58,11 +59,19 @@ Ao executar o jogo a cobra morre com bastante frequência, isso acorre basicamen
 
 #### Aprendendo a procurar comida
 
-Nesta atividade é adicionado um novo atributo na rede para também dar capacidade de procurar por comida. Além dos 4 atributos especificados na atividade anterior, agora o novo atributo ($x_5$) indica em que direção a comida esta em relação a cobra, -1 se a comida está a esquerda da cobra, 0 na frente e 1 a direita. Também foi adicionado um novo neurônio na camada de saída que prediz se a cobra está caminhando na direção da comida, 1 para sim e 0 para não. 
+Nesta tarefa é adicionado um novo atributo na rede para também dar capacidade de procurar por comida. Além dos 4 atributos especificados na tarefa anterior, agora o novo atributo (_x5_) indica em que direção a comida esta em relação a cabeça da cobra, -1 se a comida está a esquerda da cobra, 0 na frente e 1 a direita. Também foi adicionado um novo neurônio na camada de saída que prediz se a cobra está caminhando na direção da comida, 1 para sim e 0 para não. 
 
 <p align="center">
   <img src="imgs/mlp_hun.png" />
 </p>
+
+Antes de tudo, para iniciar o treinamento nesse modo é necessário que a variável _CONST_BOT_MODE_ receba o valor "_hungry_" (como é mostrado abaixo). A execução do treinamento é feita de maneira similar ao da tarefa de sobrevivência, com a diferença que o _array_ de entrada agora contém 5 dimensões e o _array_ de label contém 2 dimensões. Para cada entrada, a rede retorna dois valores para cada saída. Os valores são somados e a soma com maior valor o dentre as 3 saídas é usada para indicar qual movimento deve ser feito.
+
+```
+CONST_BOT_MODE = "hungry"
+```
+
+Ao executar o jogo a cobra deve aprender tanto a sobreviver, quanto a procurar pela comida. 
 
 ### Modo Play
 
