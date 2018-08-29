@@ -81,3 +81,8 @@ Note que nesse modo a interface possui uma nova opção de comando para salvar o
 
 ### Modo Multiplayer
 
+Nessa seção é explicado como usar o modelo aprendido na etapa de treino. Primeiro, você deve retirar o jogo do modo treino alterando o valor da variável _CONST_TRAIN_MODE_ para _False_:
+```
+CONST_TRAIN_MODE = False
+```
+
