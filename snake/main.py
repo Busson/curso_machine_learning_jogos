@@ -26,47 +26,61 @@ CONST_TRAIN_MODE = True
 CONST_BOT_MODE = "hungry"
 
 #create_map_rooms()
-create_map_radome()
+#create_map_radome()
 
 snakes_data = {}
 if CONST_TRAIN_MODE: 
     snakes_data["bot_snake"] = create_snake((15,15), 12, (0, 255, 128), "norte")
 else:
-    #snakes_data["player_snake"] = create_snake((7,15), 5, (0, 255, 128), "norte") 
-    snakes_data["bot_snake"] = create_snake((15,15), 12, (0, 255, 128), "norte") 
+    snakes_data["player_snake"] = create_snake((7,15), 3, (0, 128, 255), "norte") 
+    snakes_data["bot_snake"] = create_snake((21,15), 3, (0, 255, 128), "norte") 
 
 
+#inicializando os componentes do jogo
 initialize_game(CONST_TRAIN_MODE, CONST_BOT_MODE)
 
+#laço principal do jogo
 while not GAME["end"]:
 
+    #controla a velocidade do jogo e limpa o canvas
     await_ticks_and_fill_screen()
 
+    #registra as posições onde as cobras estão passando
     reg_snake_in_map(snakes_data)
 
+    #obtem os eventos de tecla
     capture_key_events()
 
+    #processamento de cada cobra no jogo
     for key, snake in snakes_data.items():
+        #as cobras bots e cobra jogador sao tratadas de maneiras diferentes
         if key == "player_snake":
-           move_snake(snake, 0)  
-        else:
-           x_data, y_data = get_snake_sense_data(snake, CONST_BOT_MODE)
-           #print(x_data, y_data) 
-           bot_mov = feed_neural_net(snake, x_data, y_data, CONST_TRAIN_MODE, CONST_BOT_MODE)
-           #print(bot_mov)
-           move_snake(snake, bot_mov) 
-
-           update_best_pontuation(snake) 
-               
+           #move a cobra jogador de acordo com a tecla pressionada 
+           move_snake(snake, GAME["player_current_key"])  
            
+        else:
+           #a funcao abaixo obtem os dados de sensoriamento da cobra que sao usados na rede neural 
+           x_data, y_data = get_snake_sense_data(snake, CONST_BOT_MODE)
+           bot_mov = feed_neural_net(snake, x_data, y_data, CONST_TRAIN_MODE, CONST_BOT_MODE)
+           #a decisao de movimento retornada pela rede neural é usada para mover a cobra
+           move_snake(snake, bot_mov) 
+           
+        #as informações da cobra sao enviadas para o core do jogo que atualizar a melhor pontuacao alcancada 
+        update_best_pontuation(snake, key) 
+               
+        #desenha todas as cobras do mapa no canvas  
         draw_snake(GAME["screen"], snake) 
     
+    #desenha todos os elementos do mapa no canvas
     draw_map(GAME["screen"])
 
+    #limpa os registros do mapa
     unreg_snake_in_map()
 
+    #checa se a partida terminou
     check_game_is_over(snakes_data)
 
+    #desenha as informacoes do jogo no canvas e faz o flip para a tela
     draw_game_info_and_flip()
     
 
