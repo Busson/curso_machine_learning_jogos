@@ -77,12 +77,16 @@ Dessa vez, ao executar o jogo a cobra deve aprender tanto a sobreviver, quanto a
   <img src="imgs/test_hun.png" />
 </p>
 
-Note que nesse modo a interface possui uma nova opção de comando para salvar o modelo que a cobra aprendeu. Quando você achar que a cobra já está esperta o suficiente, aperte a tecla S para salvar a aprendizagem, o modelo salvo é usado no modo multiplayer.
+Note que nesse modo a interface possui uma nova opção de comando para salvar o modelo que a cobra aprendeu. Quando você achar que a cobra já está esperta o suficiente, aperte a tecla S para salvar a aprendizagem, o modelo salvo pode ser usado no modo multiplayer.
 
 ### Modo Multiplayer
 
-Nessa seção é explicado como usar o modelo aprendido na etapa de treino. Primeiro, você deve retirar o jogo do modo treino alterando o valor da variável _CONST_TRAIN_MODE_ para _False_:
+Chegou a hora do Humano vs Bot!. Para executar esse modo você deve retirar o jogo do modo de treino alterando o valor da variável _CONST_TRAIN_MODE_ para _False_.  As teclas de seta esquerda/direira controlam a movimentação da cobra do jogador.
 ```
 CONST_TRAIN_MODE = False
 ```
+O jogo altomaticamene carrega os pesos salvos na etapa de treino. Se você salvou a aprendizagem da cobra no momento em que ela estava com bom desempenho, então provavelmente você vai levar uma surra como na imagem abaixo, Haha =D. 
 
+<p align="center">
+  <img src="imgs/multiplayer.png" />
+</p>
