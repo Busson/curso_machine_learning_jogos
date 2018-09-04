@@ -1,4 +1,4 @@
-# Redes Neurais aplicado a jogos digitais
+# Redes Neurais aplicada a jogos digitais
 Este é o material da oficina de redes neurais aplicada a jogos digitais. Em especial, este material é dedicado a pessoas curiosas que querem iniciar carreira na área de aprendizagem de máquina. Se você já tem _expertise_ na área, sinto lhe informar que este material não apresenta métodos avançados, apenas implementação de conceitos básicos em projetos divertidos  =). Se você é professor, fique a vontade para usar este material em suas aulas, mas cite a referência ;)
 
 Vale ressaltar que o ideal é obter este material após assistir minha aula sobre fundamentos de aprendizagem de máquina e redes neurais. De qualquer forma, meus _slides_ estão na pasta "slide" que esta na raiz deste repositório.
@@ -39,7 +39,7 @@ Nessa tarefa a cobra deve aprender a sobreviver no mapa. Para isso, ela deve apr
   <img src="imgs/mlp_sur.png" />
 </p>
 
-Antes de executar o jogo verifique se a variável _CONST_BOT_MODE_ está com o valor "_survive_" (como abaixo). Neste modo a cobra gera apenas os dados para a rede e interpreta sua saída apenas para tomar decisões de sobrevivência. Durante a execução do treinamento, são gerados 3 _arrays_ de 4 dimensões, cada array contém uma decisão de movimento (-1/0/1) e os sensores de obstáculos em relação a cabeça da cobra. Cada entrada possui um _array_ _label_ correspondente com 1 dimensão, indicando o estado de vida da cobra para cada decisão de movimento, 1 para viva e 0 para morta. A saída da rede é usada para a tomada de decisão, a maior ativação dentre as 3 saídas é usada para indicar qual movimento deve ser feito, por exemplo: dada a saída [0.9, 0.5, 0.3] a cobra deve ir para a esquerda, pois o valor da primeira posição corresponde ao _array_ de entrada do movimento esquerda.
+Antes de executar o jogo verifique se a variável _CONST_BOT_MODE_ está com o valor "_survive_" (como abaixo). Neste modo a cobra gera apenas os dados necessários para que a cobra tome decisões de sobrevivência. Durante a execução do treinamento, são gerados 3 _arrays_ de 4 dimensões, cada array contém uma decisão de movimento (-1/0/1) e os sensores de obstáculos em relação a cabeça da cobra. Cada entrada possui um _array_ _label_ correspondente com 1 dimensão, indicando o estado de vida da cobra para cada decisão de movimento, 1 para viva e 0 para morta. A saída da rede é usada para a tomada de decisão, a maior ativação dentre as 3 saídas é usada para indicar qual movimento deve ser feito, por exemplo: dada a saída [0.9, 0.5, 0.3] a cobra deve ir para a esquerda, pois o valor da primeira posição corresponde ao _array_ de entrada do movimento esquerda.
 
 ```
 CONST_BOT_MODE = "survive"
