@@ -85,7 +85,7 @@ Chegou a hora do Humano vs Bot!. Para executar esse modo você deve retirar o jo
 ```
 CONST_TRAIN_MODE = False
 ```
-O jogo altomaticamene carrega os pesos salvos na etapa de treino. Se você salvou a aprendizagem da cobra no momento em que ela estava com bom desempenho, então provavelmente você vai levar uma surra como na imagem abaixo, Haha =D. 
+O jogo automaticamene carrega os pesos salvos na etapa de treino. Se você salvou a aprendizagem da cobra no momento em que ela estava com bom desempenho, então provavelmente você vai levar uma surra como na imagem abaixo, Haha =D. 
 
 <p align="center">
   <img src="imgs/multiplayer.png" />
